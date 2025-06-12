@@ -19,6 +19,87 @@
   display: block;
 }
 
+/* Section wrapper */
+.section.columns-container {
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 40px 30px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Heading */
+.section.columns-container .default-content-wrapper > p {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #111;
+}
+
+/* Form grid */
+.columns-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Each input row */
+.columns.forms.block > div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Label */
+.columns.forms.block p {
+  font-size: 14px;
+  color: #555;
+}
+
+/* Input */
+.columns.forms.block input[type="text"],
+.columns.forms.block input[type="password"] {
+  width: 100%;
+  padding: 10px 40px 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+}
+
+/* Eye icon */
+.columns.forms.block span {
+  font-size: 16px;
+  color: #666;
+}
+
+/* Login button */
+.section.columns-container .columns.forms.block .button-container {
+  text-align: center;
+  margin-top: 24px;
+}
+
+.section.columns-container .columns.forms.block .button-container .button {
+  display: inline-block;
+  background-color: #e60023;
+  color: white;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 24px;
+  font-size: 16px;
+  transition: background 0.3s ease;
+}
+
+.section.columns-container .columns.forms.block .button-container .button:hover {
+  background-color: #ad081b;
+}
+
+/* Error message */
+.section.columns-container .columns.forms.block #login-error {
+  font-size: 13px;
+}
 @media (width >= 900px) {
   .columns > div {
     align-items: center;
