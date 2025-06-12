@@ -16,3 +16,7 @@ indices:
       image:
         select: head > meta[name="image"], head > meta[property="og:image"]
         value: attribute(el, "content")
+
+      lastModified:
+        select: head > meta[name="image"]
+        value: attribute(el, "content")
