@@ -120,6 +120,28 @@ function loadDelayed() {
   // load anything that can be postponed to the latest here
 }
 
+  const cards = [...document.querySelectorAll('.cards-container .cards')];
+  const seeMoreBtn = document.querySelector('.button-container button');
+
+  let visibleCount = 0;
+  const batchSize = 3;
+
+  function revealNextBatch() {
+    const nextBatch = cards.slice(visibleCount, visibleCount + batchSize);
+    nextBatch.forEach(card => card.classList.add('visible'));
+    visibleCount += batchSize;
+
+    if (visibleCount >= cards.length) {
+      //seeMoreBtn.style.display = 'none';
+    }
+  }
+
+  // Initial batch
+  //revealNextBatch();
+
+  //seeMoreBtn.addEventListener('click', revealNextBatch);
+
+
 
 async function loadPage() {
   await loadEager(document);

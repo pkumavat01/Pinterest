@@ -25,3 +25,29 @@
   aspect-ratio: 4 / 3;
   object-fit: cover;
 }
+/*custom*/
+.cards.block ul li {
+  display: block;
+  list-style: none;
+}
+
+.cards.block ul li.visible {
+  display: block;
+}
+
+.cards.block .default-content-wrapper p {
+  display: inline-block;
+  padding: 10px 20px;
+  margin: 20px auto;
+  background-color: #e60023;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+}
+
+.cards.block .default-content-wrapper p:hover {
+  background-color: #c4001e;
+}

@@ -1,7 +1,7 @@
 indices:
   Pinterest:
     include:
-      - '**'
+      - ['**']
     exclude: []
     target: /query-index.json
     properties:

@@ -1,0 +1,34 @@
+.search-results-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.search-card {
+  background: white;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  transition: transform 0.2s;
+}
+
+.search-card:hover {
+  transform: scale(1.02);
+}
+
+.search-card-img picture img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-bottom: 1px solid #eee;
+}
+
+.search-card-body {
+  padding: 15px;
+}
+
+.search-card-body h3 {
+  margin-top: 0;
+}

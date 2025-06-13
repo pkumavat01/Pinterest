@@ -151,6 +151,7 @@ export default async function decorate(block) {
   navWrapper.append(nav);
   block.append(navWrapper);
 
+  
   const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
 
   // Find the "Favorites" button by its href or title

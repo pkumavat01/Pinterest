@@ -27,19 +27,25 @@ export default function decorate(block) {
   block.textContent = '';
   block.append(ul);
 
+  /*Dynamic for favorites page*/
   if (block.classList.contains('dynamic')) {
+    console.log("found")
     if (
       document.body.classList.contains('favorites-page') &&
       sessionStorage.getItem('isLoggedIn') !== 'true'
     ) {
       window.location.href = '/login';
     }
-    else{
-      
-    loadDynamicFavorites(ul);
+    else {
+
+      loadDynamicFavorites(ul);
     }
   }
+
+
 }
+
+
 
 async function loadDynamicFavorites(ul) {
   const username = sessionStorage.getItem('username') || 'Punam';
