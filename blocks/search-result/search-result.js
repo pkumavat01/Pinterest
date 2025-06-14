@@ -11,7 +11,7 @@ export default async function decorate(block) {
 
   const allCards = pageData.data;
   const categories = [...new Set(allCards.map(c => c.Subcategory).filter(Boolean))];
-
+  console.log(categories)
   const carousel = document.createElement('div');
   carousel.className = 'subcategory-carousel';
 
@@ -27,7 +27,7 @@ export default async function decorate(block) {
   });
 
   const cardsWrapper = document.createElement('div');
-  cardsWrapper.className = 'cards-wrapper';
+  cardsWrapper.className = 'card-container';
 
   function renderCards(filterCat = null) {
     cardsWrapper.innerHTML = '';

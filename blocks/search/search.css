@@ -1,11 +1,15 @@
 .search-input {
   padding: 10px;
   width: 100%;
-  border: 1px solid #ccc;
   font-size: 16px;
-  border-radius: 6px;
+  border-radius: 12px;
+  background-color: var(--overlay-background-color);
+  border: none;
 }
 
+.search-input:hover{
+    background-color: var(--highlight-background-color);
+}
 .search-dropdown {
   border: 1px solid #ccc;
   border-top: none;

@@ -1,7 +1,7 @@
 export default async function decorate(block) {
   const input = document.createElement('input');
   input.type = 'text';
-  input.placeholder = 'Search pages…';
+  input.placeholder = 'Search for easy dinners, fashion, etc';
   input.className = 'search-input';
 
   const dropdown = document.createElement('div');
