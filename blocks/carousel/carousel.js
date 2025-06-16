@@ -129,7 +129,7 @@ export default async function decorate(block) {
       slideIndicators.appendChild(li);
     }
 
-    row.remove(); // Remove original slide markup from block
+    row.remove(); 
   });
 
   block.prepend(container);
@@ -148,4 +148,49 @@ export default async function decorate(block) {
     item.style.backgroundColor = getRandomColor();
     console.log(getRandomColor())
   });
+
+  const urlKey = window.location.pathname.split('/').pop();
+  console.log(urlKey)
+try {
+  const res = await fetch('/data.json');
+  const json = await res.json();
+  const categoryData = json[urlKey];
+
+  if (!categoryData || !Array.isArray(categoryData.data)) {
+    console.warn(`No data found for: ${urlKey}`);
+    return;
+  }
+
+  const cards = categoryData.data;
+
+  const uniqueCategories = [...new Map(
+    cards.map(card => [card.Subcategory, card])
+  ).values()];
+
+  uniqueCategories.forEach((item) => {
+    if (!item.Subcategory || !item['Image URL']) return;
+
+    const card = document.createElement('div');
+
+    card.innerHTML = `
+      <div>
+        <div data-valign="middle">
+          <picture>
+            <source type="image/webp" srcset="${item['Image URL']}?width=2000&format=webply&optimize=medium" media="(min-width: 600px)">
+            <source type="image/webp" srcset="${item['Image URL']}?width=750&format=webply&optimize=medium">
+            <source type="image/png" srcset="${item['Image URL']}?width=2000&format=png&optimize=medium" media="(min-width: 600px)">
+            <img loading="lazy" alt="${item.Subcategory}" src="${item['Image URL']}?width=750&format=png&optimize=medium" width="275" height="183">
+          </picture>
+        </div>
+        <div data-valign="middle"><p>${item.Subcategory}</p></div>
+      </div>
+    `;
+
+    block.appendChild(card);
+  });
+
+} catch (error) {
+  console.error('Error loading data.json:', error);
+}
+
 }

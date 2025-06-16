@@ -10,7 +10,7 @@ export default async function decorate(block) {
   }
 
   const allCards = pageData.data;
-  const categories = [...new Set(allCards.map(c => c.Subcategory).filter(Boolean))];
+  const categories = [...new Set(allCards.map(c => c.Category).filter(Boolean))];
 
   let selectedCategory = null;
   let searchTerm = '';
@@ -19,14 +19,14 @@ export default async function decorate(block) {
   searchInput.type = 'text';
   searchInput.placeholder = 'Search by title...';
   searchInput.className = 'title-search-input';
-
+/*
   const carousel = document.createElement('div');
-  carousel.className = 'subcategory-carousel';
+  carousel.className = 'category-carousel'; 
 
   categories.forEach((cat) => {
     const btn = document.createElement('button');
     btn.textContent = cat;
-    btn.className = 'subcategory-btn';
+    btn.className = 'category-btn'; 
     btn.addEventListener('click', () => {
       selectedCategory = cat;
       setActive(btn);
@@ -34,6 +34,51 @@ export default async function decorate(block) {
     });
     carousel.appendChild(btn);
   });
+*/
+const carouselWrapper = document.createElement('div');
+carouselWrapper.className = 'carousel-wrapper';
+
+const carousel = document.createElement('div');
+carousel.className = 'carousel selector block';
+carousel.dataset.blockName = 'carousel';
+carousel.dataset.blockStatus = 'loaded';
+
+categories.forEach((cat) => {
+  const categoryCards = allCards.filter(c => c.Category === cat);
+  const firstImage = categoryCards.find(card => card['Image URL'])?.['Image URL'] || '/icons/default-icon.png';
+
+  const outerDiv = document.createElement('div');
+
+  const imageDiv = document.createElement('div');
+  imageDiv.dataset.valign = 'middle';
+  imageDiv.innerHTML = `
+    <picture>
+      <source type="image/webp" srcset="${firstImage}" media="(min-width: 600px)">
+      <source type="image/webp" srcset="${firstImage}">
+      <source type="image/png" srcset="${firstImage}" media="(min-width: 600px)">
+      <img loading="lazy" alt="${cat}" src="${firstImage}" width="275" height="183">
+    </picture>
+  `;
+
+  const textDiv = document.createElement('div');
+  textDiv.dataset.valign = 'middle';
+  textDiv.innerHTML = `<p>${cat}</p>`;
+
+  outerDiv.appendChild(imageDiv);
+  outerDiv.appendChild(textDiv);
+
+  // Make category clickable
+  outerDiv.style.cursor = 'pointer';
+  outerDiv.addEventListener('click', () => {
+    selectedCategory = cat;
+    renderCards();
+  });
+
+  carousel.appendChild(outerDiv);
+});
+
+carouselWrapper.appendChild(carousel);
+block.appendChild(carouselWrapper);
 
   const cardsWrapper = document.createElement('div');
   cardsWrapper.className = 'card-container';
@@ -41,7 +86,7 @@ export default async function decorate(block) {
   function renderCards() {
     cardsWrapper.innerHTML = '';
     const filtered = allCards.filter(card => {
-      const matchCategory = selectedCategory ? card.Subcategory === selectedCategory : true;
+      const matchCategory = selectedCategory ? card.Category === selectedCategory : true;
       const matchTitle = card.Title?.toLowerCase().includes(searchTerm.toLowerCase());
       return matchCategory && matchTitle;
     });

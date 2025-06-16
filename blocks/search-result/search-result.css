@@ -54,4 +54,103 @@
   border-radius: 6px;
 }
 
+.subcategory-carousel {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 12px 0;
+  scrollbar-width: none; /* Firefox */
+}
+.subcategory-carousel::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
 
+.subcategory-btn {
+  padding: 8px 16px;
+  background-color: #f1f1f1;
+  border: none;
+  border-radius: 999px;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.subcategory-btn:hover {
+  background-color: #ddd;
+}
+
+.subcategory-btn.active {
+  background-color: #000;
+  color: #fff;
+}
+.carousel-wrapper {
+  margin-bottom: 2rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.carousel.selector.block {
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  gap: 1rem;
+  padding: 1rem;
+  background: white;
+  border-radius: 16px;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;        
+  -ms-overflow-style: none;     
+  position: relative;
+}
+.carousel.selector.block > div {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 1rem 0 0;
+  border-radius: 13px;
+  min-width: fit-content;
+  max-width: 250px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  scroll-snap-align: start;
+  transition: background 0.3s ease;
+  cursor: pointer;
+}
+
+.carousel.selector.block > div:hover {
+  background-color: #e0e0e0;
+}
+
+.carousel.selector.block picture {
+  width: 60px;
+  height: 50px;
+  border-top-left-radius: 13px;
+  border-bottom-left-radius: 13px;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel.selector.block picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.carousel.selector.block .carousel-slide {
+  flex: 0 0 100%;
+}
+.carousel.selector.block p,
+.carousel.selector.block h2 {
+  margin: 0;
+  font-weight: 600;
+  white-space: nowrap;
+  color: #333;
+  line-height: 1;
+}
