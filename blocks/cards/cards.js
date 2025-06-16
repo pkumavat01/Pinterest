@@ -27,7 +27,6 @@ export default function decorate(block) {
   block.textContent = '';
   block.append(ul);
 
-  /*Dynamic for favorites page*/
   if (block.classList.contains('dynamic')) {
     console.log("found")
     if (
@@ -41,7 +40,7 @@ export default function decorate(block) {
       loadDynamicFavorites(ul);
     }
   }
-  //carousel
+  
   document.querySelectorAll('.cards.long > ul >li .cards-card-body').forEach(cardBody => {
   const buttons = cardBody.querySelectorAll('.button-container');
   if (buttons.length) {
@@ -49,13 +48,62 @@ export default function decorate(block) {
     wrapper.className = 'button-carousel';
 
     buttons.forEach(btn => {
-      wrapper.appendChild(btn); // move each button-container into the wrapper
+      wrapper.appendChild(btn); 
     });
 
-    // Insert wrapper at the top of cardBody
     cardBody.insertBefore(wrapper, cardBody.firstChild);
   }
 });
+
+[...ul.querySelectorAll('.cards-card-image')].forEach((imageDiv) => {
+  const heartBtn = document.createElement('div');
+  heartBtn.className = 'like-overlay';
+  heartBtn.innerHTML = `<img src="/icons/heart.svg" alt="Like">`; 
+  heartBtn.addEventListener('click', async (e) => {
+    e.stopPropagation();
+
+    const card = imageDiv.closest('li');
+    const img = imageDiv.querySelector('img')?.src;
+    const title = card.querySelector('h5, h3, h4')?.textContent?.trim() || '';
+    const desc = card.querySelector('p')?.textContent?.trim() || '';
+    const user = sessionStorage.getItem('username') || 'Punam';
+
+    if (!img || !title) return alert('Missing data to save favorite.');
+
+    const favorite = {
+      user,
+      favorites: [
+        {
+          title,
+          description: desc,
+          image: img,
+        },
+      ],
+    };
+
+    try {
+      const res = await fetch('http://localhost:5000/api/favorites/sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(favorite),
+      });
+
+      const result = await res.json();
+      if (result.success) {
+        alert('Added to favorites!');
+        heartBtn.style.opacity = 0.4; // visually indicate liked
+      } else {
+        alert('Failed to add favorite.');
+      }
+    } catch (err) {
+      console.error('Favorite error:', err);
+      alert('Server error while adding favorite.');
+    }
+  });
+
+  imageDiv.appendChild(heartBtn);
+});
+
 
 }
 

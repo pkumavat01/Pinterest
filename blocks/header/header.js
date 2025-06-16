@@ -153,6 +153,28 @@ export default async function decorate(block) {
 
   
   const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
+  // Modify existing Login button if user is logged in
+  if (isLoggedIn) {
+    const loginBtn = document.querySelector('.nav-tools a[href="/login"]');
+    const signupBtn = document.querySelector('.nav-tools a[href="/signup"]');
+
+    // Hide the signup button if it exists
+    if (signupBtn) {
+      signupBtn.style.display = 'none'; // fixed typo from 'dipplay'
+    }
+
+    if (loginBtn) {
+      loginBtn.textContent = 'Logout';
+      loginBtn.href = '/login';
+
+      loginBtn.addEventListener('click', (e) => {
+        e.preventDefault(); // prevent immediate navigation
+        sessionStorage.removeItem('isLoggedIn');
+        // optionally clear more sessionStorage items if needed
+        window.location.href = '/login';
+      });
+    }
+  }
 
   // Find the "Favorites" button by its href or title
   const favoritesBtn = document.querySelector('a[href="/favorites"], a[title="Favorites"]');

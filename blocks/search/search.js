@@ -22,24 +22,39 @@ export default async function decorate(block) {
     ? queryIndex.data.filter(p => p.path.startsWith('/search'))
     : [];
 
-  input.addEventListener('focus', () => {
+  // Utility to render dropdown options based on search
+  function renderOptions(searchTerm = '') {
     dropdown.innerHTML = '';
+    const term = searchTerm.toLowerCase();
+
     sheets.forEach((sheet) => {
       const pageMeta = filteredPages.find(p => p.path === `/search/${sheet}`);
       if (!pageMeta) return;
 
-      const item = document.createElement('div');
-      item.className = 'search-option';
-      item.innerHTML = `
-        <img src="${pageMeta.image || '/icons/default-icon.png'}" alt="${pageMeta.title || sheet}" />
-        <span>${pageMeta.title || sheet}</span>
-      `;
-      item.addEventListener('click', () => {
-        window.location.href = `/search/${sheet}`;
-      });
-      dropdown.appendChild(item);
+      const title = pageMeta.title || sheet;
+      if (title.toLowerCase().includes(term)) {
+        const item = document.createElement('div');
+        item.className = 'search-option';
+        item.innerHTML = `
+          <img src="${pageMeta.image || '/icons/default-icon.png'}" alt="${title}" />
+          <span>${title}</span>
+        `;
+        item.addEventListener('click', () => {
+          window.location.href = `/search/${sheet}`;
+        });
+        dropdown.appendChild(item);
+      }
     });
-    dropdown.style.display = 'flex';
+
+    dropdown.style.display = dropdown.children.length > 0 ? 'flex' : 'none';
+  }
+
+  input.addEventListener('focus', () => {
+    renderOptions(input.value);
+  });
+
+  input.addEventListener('input', () => {
+    renderOptions(input.value);
   });
 
   input.addEventListener('blur', () => {

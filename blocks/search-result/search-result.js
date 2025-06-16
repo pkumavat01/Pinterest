@@ -11,7 +11,15 @@ export default async function decorate(block) {
 
   const allCards = pageData.data;
   const categories = [...new Set(allCards.map(c => c.Subcategory).filter(Boolean))];
-  console.log(categories)
+
+  let selectedCategory = null;
+  let searchTerm = '';
+
+  const searchInput = document.createElement('input');
+  searchInput.type = 'text';
+  searchInput.placeholder = 'Search by title...';
+  searchInput.className = 'title-search-input';
+
   const carousel = document.createElement('div');
   carousel.className = 'subcategory-carousel';
 
@@ -20,8 +28,9 @@ export default async function decorate(block) {
     btn.textContent = cat;
     btn.className = 'subcategory-btn';
     btn.addEventListener('click', () => {
-      renderCards(cat);
+      selectedCategory = cat;
       setActive(btn);
+      renderCards();
     });
     carousel.appendChild(btn);
   });
@@ -29,9 +38,19 @@ export default async function decorate(block) {
   const cardsWrapper = document.createElement('div');
   cardsWrapper.className = 'card-container';
 
-  function renderCards(filterCat = null) {
+  function renderCards() {
     cardsWrapper.innerHTML = '';
-    const filtered = filterCat ? allCards.filter(c => c.Subcategory === filterCat) : allCards;
+    const filtered = allCards.filter(card => {
+      const matchCategory = selectedCategory ? card.Subcategory === selectedCategory : true;
+      const matchTitle = card.Title?.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchCategory && matchTitle;
+    });
+
+    if (filtered.length === 0) {
+      cardsWrapper.innerHTML = '<p>No matching results.</p>';
+      return;
+    }
+
     filtered.forEach(card => {
       const div = document.createElement('div');
       div.className = 'card';
@@ -49,9 +68,16 @@ export default async function decorate(block) {
     activeBtn.classList.add('active');
   }
 
-  // Initial render
+  searchInput.addEventListener('input', () => {
+    searchTerm = searchInput.value;
+    renderCards();
+  });
+
+  // Initial render (all cards, no filter)
   renderCards();
 
+  // Append in order
+  block.appendChild(searchInput);
   block.appendChild(carousel);
   block.appendChild(cardsWrapper);
 }

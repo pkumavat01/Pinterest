@@ -319,4 +319,37 @@
   display: none;
 }
 
+.cards.long.block .cards-card-image {
+  position: relative;
+}
+
+.cards.long.block .cards-card-image .like-overlay {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  opacity: 0;
+}
+
+.cards.long.block .cards-card-image:hover .like-overlay {
+  opacity: 1;
+}
+
+.cards.long.block .cards-card-image .like-overlay:hover {
+  transform: scale(1.1);
+}
+
+.cards.long.block .cards-card-image .like-overlay img {
+  width: 18px;
+  height: 18px;
+}
 
