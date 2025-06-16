@@ -1,45 +1,84 @@
+/* Input styling */
 .search-input {
-  padding: 10px;
+  padding: 0.5rem;
   width: 100%;
-  font-size: 16px;
-  border-radius: 12px;
-  background-color: var(--overlay-background-color);
-  border: none;
+  font-size: 1.2rem;
+  border-radius: 20px;
+  background-color: #eee;
+  border: 3px solid #a3c4f3;
+  outline: none;
+  box-shadow: none;
 }
 
-.search-input:hover{
-    background-color: var(--highlight-background-color);
+.search-input:hover {
+  background-color: #e0e0e0;
 }
+
+/* Dropdown wrapper */
 .search-dropdown {
-  border: 1px solid #ccc;
-  border-top: none;
+  display: flex;
+  flex-wrap: wrap;              /* Enables wrapping on small screens */
+  gap: 1rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 2rem 2rem 1rem 2rem;
   background: white;
-  max-height: 300px;
-  overflow-y: auto;
-  display: none;
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
   position: absolute;
   z-index: 999;
-  width: 100%;
-  border-radius: 0 0 6px 6px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: none;
 }
 
+/* Search option card */
 .search-option {
+  width: 100%;
+  max-width: 250px;
+  flex: 1 1 calc(33.333% - 1rem); /* 3 items per row with gap */
   display: flex;
-  align-items: center;
-  padding: 10px;
-  cursor: pointer;
+  padding: 0;
+  border-radius: 20px;
+  background: #f5f5f5;
+  flex-shrink: 0;
+  overflow: hidden;
   transition: background 0.2s ease-in-out;
-}
-
-.search-option:hover {
-  background: #f9f9f9;
+  height: 100px;
+  align-items: stretch;
+  cursor:pointer;
 }
 
 .search-option img {
-  width: 32px;
-  height: 32px;
-  margin-right: 10px;
+  width: 100px;
+  height: 100%;
   object-fit: cover;
-  border-radius: 4px;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+
+.search-option span {
+  padding: 0.5rem 0.5rem;
+  font-weight: bold;
+  font-size: 1rem;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  display: block;
+  margin:auto;
+}
+
+.search-option:hover {
+  background: #f0f0f0;
+}
+
+/* Media Queries for responsiveness */
+@media (max-width: 1024px) {
+  .search-option {
+    flex: 1 1 calc(50% - 1rem); /* 2 per row on tablets */
+  }
+}
+
+@media (max-width: 600px) {
+  .search-option {
+    flex: 1 1 100%; /* 1 per row on mobile */
+  }
 }

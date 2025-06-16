@@ -70,8 +70,8 @@
     --heading-font-size-xl: 36px;
     --heading-font-size-l: 28px;
     --heading-font-size-m: 22px;
-    --heading-font-size-s: 20px;
-    --heading-font-size-xs: 18px;
+    --heading-font-size-s: 15px;
+    --heading-font-size-xs: 13px;
   }
 }
 
@@ -109,8 +109,8 @@ h3,
 h4,
 h5,
 h6 {
-  margin-top: 0.8em;
-  margin-bottom: 0.25em;
+  margin-top: 1em;
+  margin-bottom: 0.3em;
   font-family: var(--heading-font-family);
   font-weight: 600;
   line-height: 1.25;
@@ -121,8 +121,8 @@ h1 { font-size: var(--heading-font-size-xl); }
 h2 { font-size: var(--heading-font-size-l); }
 h3 { font-size: var(--heading-font-size-m); }
 h4 { font-size: var(--heading-font-size-s); }
-h5 { font-size: var(--heading-font-size-xs); }
-h6 { font-size: var(--heading-font-size-xxs); }
+h5 { font-size: var(--heading-font-size-s); }
+h6 { font-size: var(--heading-font-size-xs); }
 
 p,
 dl,
@@ -130,7 +130,7 @@ ol,
 ul,
 pre,
 blockquote {
-  margin-top: 0.8em;
+  margin-top: 0.5em;
   margin-bottom: 0.25em;
 }
 

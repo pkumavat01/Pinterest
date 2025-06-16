@@ -41,7 +41,21 @@ export default function decorate(block) {
       loadDynamicFavorites(ul);
     }
   }
+  //carousel
+  document.querySelectorAll('.cards.long > ul >li .cards-card-body').forEach(cardBody => {
+  const buttons = cardBody.querySelectorAll('.button-container');
+  if (buttons.length) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'button-carousel';
 
+    buttons.forEach(btn => {
+      wrapper.appendChild(btn); // move each button-container into the wrapper
+    });
+
+    // Insert wrapper at the top of cardBody
+    cardBody.insertBefore(wrapper, cardBody.firstChild);
+  }
+});
 
 }
 

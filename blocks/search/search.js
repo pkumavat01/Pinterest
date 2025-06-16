@@ -39,7 +39,7 @@ export default async function decorate(block) {
       });
       dropdown.appendChild(item);
     });
-    dropdown.style.display = 'block';
+    dropdown.style.display = 'flex';
   });
 
   input.addEventListener('blur', () => {
