@@ -14,84 +14,73 @@ export default async function decorate(block) {
 
   let selectedCategory = null;
   let searchTerm = '';
+  let searchMode = 'local'; // 'local' or 'global'
 
-  const searchInput = document.createElement('input');
-  searchInput.type = 'text';
-  searchInput.placeholder = 'Search by title...';
-  searchInput.className = 'title-search-input';
-/*
-  const carousel = document.createElement('div');
-  carousel.className = 'category-carousel'; 
-
-  categories.forEach((cat) => {
-    const btn = document.createElement('button');
-    btn.textContent = cat;
-    btn.className = 'category-btn'; 
-    btn.addEventListener('click', () => {
-      selectedCategory = cat;
-      setActive(btn);
-      renderCards();
-    });
-    carousel.appendChild(btn);
-  });
-*/
-const carouselWrapper = document.createElement('div');
-carouselWrapper.className = 'carousel-wrapper';
-
-const carousel = document.createElement('div');
-carousel.className = 'carousel selector block';
-carousel.dataset.blockName = 'carousel';
-carousel.dataset.blockStatus = 'loaded';
-
-categories.forEach((cat) => {
-  const categoryCards = allCards.filter(c => c.Category === cat);
-  const firstImage = categoryCards.find(card => card['Image URL'])?.['Image URL'] || '/icons/default-icon.png';
-
-  const outerDiv = document.createElement('div');
-
-  const imageDiv = document.createElement('div');
-  imageDiv.dataset.valign = 'middle';
-  imageDiv.innerHTML = `
-    <picture>
-      <source type="image/webp" srcset="${firstImage}" media="(min-width: 600px)">
-      <source type="image/webp" srcset="${firstImage}">
-      <source type="image/png" srcset="${firstImage}" media="(min-width: 600px)">
-      <img loading="lazy" alt="${cat}" src="${firstImage}" width="275" height="183">
-    </picture>
-  `;
-
-  const textDiv = document.createElement('div');
-  textDiv.dataset.valign = 'middle';
-  textDiv.innerHTML = `<p>${cat}</p>`;
-
-  outerDiv.appendChild(imageDiv);
-  outerDiv.appendChild(textDiv);
-
-  // Make category clickable
-  outerDiv.style.cursor = 'pointer';
-  outerDiv.addEventListener('click', () => {
-    selectedCategory = cat;
-    renderCards();
-  });
-
-  carousel.appendChild(outerDiv);
-});
-
-carouselWrapper.appendChild(carousel);
-block.appendChild(carouselWrapper);
-
+  // DOM Containers
+  const carouselWrapper = createCarousel(categories, allCards);
   const cardsWrapper = document.createElement('div');
   cardsWrapper.className = 'card-container';
 
+  block.append(carouselWrapper, cardsWrapper);
+
+  // Carousel creation
+  function createCarousel(categories, cards) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'carousel-wrapper';
+
+    const carousel = document.createElement('div');
+    carousel.className = 'carousel selector block';
+    carousel.dataset.blockName = 'carousel';
+    carousel.dataset.blockStatus = 'loaded';
+
+    categories.forEach(cat => {
+      const firstImage = cards.find(card => card.Category === cat && card['Image URL'])?.['Image URL'] || '/icons/default-icon.png';
+      const outerDiv = document.createElement('div');
+      outerDiv.style.cursor = 'pointer';
+
+      outerDiv.innerHTML = `
+        <div data-valign="middle">
+          <picture>
+            <source type="image/webp" srcset="${firstImage}" media="(min-width: 600px)">
+            <source type="image/webp" srcset="${firstImage}">
+            <source type="image/png" srcset="${firstImage}" media="(min-width: 600px)">
+            <img loading="lazy" alt="${cat}" src="${firstImage}" width="275" height="183">
+          </picture>
+        </div>
+        <div data-valign="middle"><p>${cat}</p></div>
+      `;
+
+      outerDiv.addEventListener('click', () => {
+        selectedCategory = cat;
+        searchTerm = '';
+        searchMode = 'local'; // back to local mode
+        renderCards();
+      });
+
+      carousel.appendChild(outerDiv);
+    });
+
+    wrapper.appendChild(carousel);
+    return wrapper;
+  }
+
   function renderCards() {
     cardsWrapper.innerHTML = '';
-    const filtered = allCards.filter(card => {
+
+    // Choose data source: either local page data or full sheet
+    const cardsToRender = searchMode === 'global'
+      ? Object.values(data)
+          .filter(sheet => Array.isArray(sheet.data))
+          .flatMap(sheet => sheet.data)
+      : allCards;
+
+    const filtered = cardsToRender.filter(card => {
       const matchCategory = selectedCategory ? card.Category === selectedCategory : true;
       const matchTitle = card.Title?.toLowerCase().includes(searchTerm.toLowerCase());
       return matchCategory && matchTitle;
     });
 
-    if (filtered.length === 0) {
+    if (!filtered.length) {
       cardsWrapper.innerHTML = '<p>No matching results.</p>';
       return;
     }
@@ -108,21 +97,14 @@ block.appendChild(carouselWrapper);
     });
   }
 
-  function setActive(activeBtn) {
-    carousel.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
-    activeBtn.classList.add('active');
-  }
-
-  searchInput.addEventListener('input', () => {
-    searchTerm = searchInput.value;
-    renderCards();
-  });
-
-  // Initial render (all cards, no filter)
+  // Initial render (local data)
   renderCards();
 
-  // Append in order
-  block.appendChild(searchInput);
-  block.appendChild(carousel);
-  block.appendChild(cardsWrapper);
+  // Listen to global title search from header — search across all data
+  window.addEventListener('title-search', (e) => {
+    searchTerm = e.detail.title;
+    selectedCategory = null;
+    searchMode = 'global'; // switch to global search
+    renderCards();
+  });
 }

@@ -75,7 +75,9 @@
   white-space: nowrap;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
-
+.title-search-input{
+  visibility: hidden;
+}
 .subcategory-btn:hover {
   background-color: #ddd;
 }

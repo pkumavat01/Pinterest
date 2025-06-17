@@ -1,5 +1,5 @@
 /* Input styling */
-.search-input {
+.global-search-input {
   padding: 0.5rem;
   width: 100%;
   font-size: 1.2rem;
@@ -10,7 +10,7 @@
   box-shadow: none;
 }
 
-.search-input:hover {
+.global-search-input:hover {
   background-color: #e0e0e0;
   border: 3px solid #a3c4f3;
 }

@@ -1,6 +1,5 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
-
 // media query match that indicates mobile/tablet width
 const isDesktop = window.matchMedia('(min-width: 900px)');
 
@@ -185,7 +184,7 @@ if (favoritesBtn) {
   if (buttonContainer) {
     // Create a new <img> element
     const img = document.createElement('img');
-    img.src = './fav_favicon.ico';
+    img.src = "../../icons/fav_favicon.ico";
     img.alt = 'Favorites';
 
     // Add click handler to behave like a link
