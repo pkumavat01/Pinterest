@@ -19,6 +19,7 @@ export default function decorate(block) {
   });
 
   ul.querySelectorAll('picture > img').forEach((img) => {
+    console.log(img.src)
     img.closest('picture').replaceWith(
       createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }])
     );
@@ -54,7 +55,7 @@ export default function decorate(block) {
     cardBody.insertBefore(wrapper, cardBody.firstChild);
   }
 });
-
+/*
 [...ul.querySelectorAll('.cards-card-image')].forEach((imageDiv) => {
   const heartBtn = document.createElement('div');
   heartBtn.className = 'like-overlay';
@@ -91,7 +92,7 @@ export default function decorate(block) {
       const result = await res.json();
       if (result.success) {
         alert('Added to favorites!');
-        heartBtn.style.opacity = 0.4; // visually indicate liked
+        heartBtn.style.opacity = 0.4; 
       } else {
         alert('Failed to add favorite.');
       }
@@ -102,12 +103,124 @@ export default function decorate(block) {
   });
 
   imageDiv.appendChild(heartBtn);
-});
+});*/
 
+const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
 
+if (isLoggedIn) {
+  [...ul.querySelectorAll('.cards-card-image')].forEach((imageDiv) => {
+    const heartBtn = document.createElement('div');
+    heartBtn.className = 'like-overlay';
+    heartBtn.innerHTML = `<img src="/icons/heart.svg" alt="Like">`;
+
+    heartBtn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+
+      const card = imageDiv.closest('li');
+      const img = imageDiv.querySelector('img')?.src;
+      console.log(img)
+      const title = card.querySelector('h5, h3, h4')?.textContent?.trim() || '';
+      const desc = card.querySelector('p')?.textContent?.trim() || '';
+      const user = sessionStorage.getItem('username') || 'Punam';
+
+      if (!img || !title) return alert('Missing data to save favorite.');
+
+      const favorite = {
+        user,
+        favorites: [
+          {
+            title,
+            description: desc,
+            image: img,
+          },
+        ],
+      };
+
+      try {
+        const res = await fetch('http://localhost:5000/api/favorites/sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(favorite),
+        });
+
+        const result = await res.json();
+        if (result.success) {
+          alert('Added to favorites!');
+          heartBtn.style.opacity = 0.4;
+        } else {
+          alert('Failed to add favorite.');
+        }
+      } catch (err) {
+        console.error('Favorite error:', err);
+        alert('Server error while adding favorite.');
+      }
+    });
+
+    imageDiv.appendChild(heartBtn);
+  });
 }
 
+  // see more big cards
+  const allBigCards = [...document.querySelectorAll('main > div:first-of-type li')];
+  const initialCount = 3;
+  let currentCount = initialCount;
 
+  allBigCards.forEach((card, i) => {
+    if (i >= initialCount) card.style.display = 'none';
+  });
+
+  const seeMoreBtn1 = document.querySelector('main > div:first-of-type > div:last-of-type p');
+  if (!seeMoreBtn1) return;
+
+  seeMoreBtn1.addEventListener('click', () => {
+    console.log('click');
+
+    const remaining = allBigCards.length - currentCount;
+    const showCount = remaining >= 3 ? 3 : remaining;
+
+    allBigCards.slice(currentCount, currentCount + showCount).forEach((card) => {
+      card.style.display = 'block';
+    });
+
+    currentCount += showCount;
+    console.log(currentCount, ' ', allBigCards.length);
+
+    if (currentCount >= allBigCards.length) {
+      seeMoreBtn1.style.display = 'none';
+    }
+  });
+const allSmallCards = [...document.querySelectorAll('main > div:nth-of-type(2) li')];
+  const seeMoreBtn2 = document.querySelector('main > div:nth-of-type(2) > div:last-of-type p');
+
+  if (!allSmallCards.length || !seeMoreBtn2) {
+    return setTimeout(setupSeeMoreSmallCards, 100);
+  }
+
+  const initialCountSmall = 10;
+  let currentCountSmall = initialCountSmall;
+
+  allSmallCards.forEach((card, i) => {
+    if (i >= initialCountSmall) card.style.display = 'none';
+  });
+
+  if (seeMoreBtn2.classList.contains('bound')) return;
+  seeMoreBtn2.classList.add('bound');
+
+  seeMoreBtn2.addEventListener('click', () => {
+    const remaining = allSmallCards.length - currentCountSmall;
+    const showCount = remaining >= 5 ? 5 : remaining;
+
+    allSmallCards.slice(currentCountSmall, currentCountSmall + showCount).forEach((card) => {
+      card.style.display = 'block';
+    });
+
+    currentCountSmall += showCount;
+
+    if (currentCountSmall >= allSmallCards.length) {
+      seeMoreBtn2.style.display = 'none';
+    }
+  });
+}
 
 async function loadDynamicFavorites(ul) {
   const username = sessionStorage.getItem('username') || 'Punam';
@@ -127,19 +240,28 @@ async function loadDynamicFavorites(ul) {
 
     data.favorites.forEach((card) => {
       const li = document.createElement('li');
-
+      console.log(card.image)
       const imageDiv = document.createElement('div');
       imageDiv.className = 'cards-card-image';
-      imageDiv.appendChild(
-        createOptimizedPicture(card.image, card.title, false, [{ width: '750' }])
-      );
+      if (card.image.startsWith('http')) {
+        const img = document.createElement('img');
+        img.src = card.image;
+        img.alt = card.title;
+        img.loading = 'lazy';
+        img.width = 750;
+        imageDiv.appendChild(img);
+      } else {
+        imageDiv.appendChild(
+          createOptimizedPicture(card.image, card.title, false, [{ width: '750' }])
+        );
+      }
 
       const bodyDiv = document.createElement('div');
       bodyDiv.className = 'cards-card-body';  
       bodyDiv.innerHTML = `
-        <h3>${card.title}</h3>
+        <h5>${card.title}</h5>
         <p>${card.description}</p>
-        <button class="unlike-btn" data-id="${card._id}">Remove</button>
+        <button class="unlike-btn" data-id="${card._id}"><img src="/icons/dislike.svg" alt="unlike"></button>
       `;
 
       li.append(imageDiv, bodyDiv);

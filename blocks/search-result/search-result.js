@@ -63,7 +63,7 @@ export default async function decorate(block) {
     wrapper.appendChild(carousel);
     return wrapper;
   }
-
+/*
   function renderCards() {
     cardsWrapper.innerHTML = '';
 
@@ -89,13 +89,112 @@ export default async function decorate(block) {
       const div = document.createElement('div');
       div.className = 'card';
       div.innerHTML = `
-        <img src="${card['Image URL'] || '/icons/default-icon.png'}" alt="${card.Title}">
-        <h3>${card.Title}</h3>
+        <div class="image-container">
+          <img src="${card['Image URL'] || '/icons/default-icon.png'}" alt="${card.Title}">
+          <div class="overlay">
+            <span class="overlay-text">Open</span>
+          </div>
+        </div>
+        <h5>${card.Title}</h5>
+        <p><i>${card.Category} | ${card.Subcategory}</i></p>
         <p>${card.Description}</p>
+
       `;
       cardsWrapper.appendChild(div);
     });
   }
+*/
+function renderCards() {
+  cardsWrapper.innerHTML = '';
+
+  const cardsToRender = searchMode === 'global'
+    ? Object.values(data)
+        .filter(sheet => Array.isArray(sheet.data))
+        .flatMap(sheet => sheet.data)
+    : allCards;
+
+  const filtered = cardsToRender.filter(card => {
+    const matchCategory = selectedCategory ? card.Category === selectedCategory : true;
+    const matchTitle = card.Title?.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchCategory && matchTitle;
+  });
+
+  if (!filtered.length) {
+    cardsWrapper.innerHTML = '<p>No matching results.</p>';
+    return;
+  }
+
+  filtered.forEach(card => {
+    const div = document.createElement('div');
+    div.className = 'card';
+
+    div.innerHTML = `
+      <div class="image-container">
+        <img src="${card['Image URL'] || '/icons/default-icon.png'}" alt="${card.Title}">
+        <div class="overlay">
+          <span class="overlay-text">Open</span>
+        </div>
+      </div>
+      <h5>${card.Title}</h5>
+      <p><i>${card.Category} | ${card.Subcategory}</i></p>
+      <p>${card.Description}</p>
+    `;
+
+    // If logged in, add the heart icon overlay
+    const isLoggedIn = !!sessionStorage.getItem('username');
+    if (isLoggedIn) {
+      const imageDiv = div.querySelector('.image-container');
+      const heartBtn = document.createElement('div');
+      heartBtn.className = 'like-overlay';
+      heartBtn.innerHTML = `<img src="/icons/heart.svg" alt="Like">`;
+
+      heartBtn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+
+        const img = card['Image URL'] || '/icons/default-icon.png';
+        const title = card.Title || '';
+        const desc = card.Description || '';
+        const user = sessionStorage.getItem('username') || 'Punam';
+
+        if (!img || !title) return alert('Missing data to save favorite.');
+
+        const favorite = {
+          user,
+          favorites: [
+            {
+              title,
+              description: desc,
+              image: img,
+            },
+          ],
+        };
+
+        try {
+          const res = await fetch('http://localhost:5000/api/favorites/sync', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(favorite),
+          });
+
+          const result = await res.json();
+          if (result.success) {
+            alert('Added to favorites!');
+            heartBtn.style.opacity = 0.4;
+          } else {
+            alert('Failed to add favorite.');
+          }
+        } catch (err) {
+          console.error('Favorite error:', err);
+          alert('Server error while adding favorite.');
+        }
+      });
+
+      imageDiv.appendChild(heartBtn);
+    }
+
+    cardsWrapper.appendChild(div);
+  });
+}
 
   // Initial render (local data)
   renderCards();
@@ -107,4 +206,13 @@ export default async function decorate(block) {
     searchMode = 'global'; // switch to global search
     renderCards();
   });
+
+  const bgShades = ['#FFE4E1', '#E6E6FA', '#F0FFF0', '#FFFACD', '#E0FFFF'];
+  const carouselItems = document.querySelectorAll('.carousel.selector.block > div');
+
+  carouselItems.forEach((item, index) => {
+    const color = bgShades[index % bgShades.length];
+    item.style.backgroundColor = color;
+  });
+
 }

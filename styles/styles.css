@@ -212,7 +212,7 @@ button.secondary {
   color: var(--text-color);
 }
 main{
-  margin-top:3rem;
+  margin-top:1rem;
 }
 main img {
   max-width: 100%;

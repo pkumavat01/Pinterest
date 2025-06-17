@@ -69,6 +69,32 @@
   background: #f0f0f0;
 }
 
+
+.global-search-input {
+  padding: 0.5rem 2.5rem 0.5rem 1rem; /* leave space for the cross button */
+  width: 90%;
+  font-size: 1.2rem;
+  border-radius: 20px;
+  background-color: #eee;
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+.clear-search-btn {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #555;
+  display: none;
+}
+
+
 @media (max-width: 1024px) {
   .search-option {
     flex: 1 1 calc(50% - 1rem); 

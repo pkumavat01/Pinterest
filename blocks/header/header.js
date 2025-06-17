@@ -167,37 +167,31 @@ export default async function decorate(block) {
       loginBtn.href = '/login';
 
       loginBtn.addEventListener('click', (e) => {
-        e.preventDefault(); // prevent immediate navigation
+        e.preventDefault(); 
         sessionStorage.removeItem('isLoggedIn');
-        // optionally clear more sessionStorage items if needed
         window.location.href = '/login';
       });
     }
   }
 
-  // Find the "Favorites" button by its href or title
   const favoritesBtn = document.querySelector('a[href="/favorites"], a[title="Favorites"]');
 
 if (favoritesBtn) {
   const buttonContainer = favoritesBtn.closest('p.button-container');
 
   if (buttonContainer) {
-    // Create a new <img> element
     const img = document.createElement('img');
     img.src = "../../icons/fav_favicon.ico";
     img.alt = 'Favorites';
 
-    // Add click handler to behave like a link
     img.addEventListener('click', () => {
       window.location.href = '/favorites';
     });
 
-    // Clear existing content and insert the image
     buttonContainer.innerHTML = '';
     buttonContainer.appendChild(img);
   }
 
-  // Optionally remove if user is not logged in
   if (!isLoggedIn && buttonContainer) {
     buttonContainer.remove();
   }
