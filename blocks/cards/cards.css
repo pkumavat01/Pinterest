@@ -5,7 +5,7 @@
   padding: 0;
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start; /* Center cards if they don't fill the row */
+  justify-content: flex-start; 
   gap: 14px;
 }
 
@@ -28,7 +28,6 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
-/* Image */
 .cards.big .cards-card-image,
 .cards.small .cards-card-image {
   line-height: 0;
@@ -44,7 +43,6 @@
   display: block;
 }
 
-/* Text Overlay */
 .cards.big .cards-card-body,
 .cards.small .cards-card-body {
   position: absolute;
@@ -62,7 +60,6 @@
   text-align: center;
 }
 
-/* Text Styling */
 .cards.big .cards-card-body p:first-child,
 .cards.small .cards-card-body p:first-child {
   font-weight: 400;
@@ -76,7 +73,6 @@
   margin: 0;
 }
 
-/* CTA Button below cards */
 .cards.big .default-content-wrapper p,
 .cards.small.block .default-content-wrapper p {
   display: inline-block;
@@ -96,7 +92,6 @@
   background-color: #c4001e;
 }
 
-/* Small Card Specifics */
 .cards.small .cards-card-body {
   top: 0;
   bottom: 0;
@@ -157,8 +152,8 @@
 }
 
 .cards.small > ul > li {
-  width: 230px;    /* ✅ Compact width */
-  height: 130px;   /* ✅ Compact height */
+  width: 230px;   
+  height: 130px;   
   flex: 0 0 auto;
   position: relative;
   overflow: hidden;
@@ -182,7 +177,6 @@
   filter: brightness(0.75); 
 }
 
-/* Overlay Text */
 .cards.small .cards-card-body {
   position: absolute;
   inset: 0;
@@ -208,7 +202,7 @@
 .cards.big .like-overlay{
   display: none;
 }
-/* Button below cards */
+
 .cards-container .default-content-wrapper:last-of-type {
   display: flex;
   justify-content: center;
