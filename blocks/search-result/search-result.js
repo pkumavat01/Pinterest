@@ -14,16 +14,14 @@ export default async function decorate(block) {
 
   let selectedCategory = null;
   let searchTerm = '';
-  let searchMode = 'local'; // 'local' or 'global'
+  let searchMode = 'local'; 
 
-  // DOM Containers
   const carouselWrapper = createCarousel(categories, allCards);
   const cardsWrapper = document.createElement('div');
   cardsWrapper.className = 'card-container';
 
   block.append(carouselWrapper, cardsWrapper);
 
-  // Carousel creation
   function createCarousel(categories, cards) {
     const wrapper = document.createElement('div');
     wrapper.className = 'carousel-wrapper';
@@ -53,7 +51,7 @@ export default async function decorate(block) {
       outerDiv.addEventListener('click', () => {
         selectedCategory = cat;
         searchTerm = '';
-        searchMode = 'local'; // back to local mode
+        searchMode = 'local'; 
         renderCards();
       });
 
@@ -63,47 +61,7 @@ export default async function decorate(block) {
     wrapper.appendChild(carousel);
     return wrapper;
   }
-/*
-  function renderCards() {
-    cardsWrapper.innerHTML = '';
 
-    // Choose data source: either local page data or full sheet
-    const cardsToRender = searchMode === 'global'
-      ? Object.values(data)
-          .filter(sheet => Array.isArray(sheet.data))
-          .flatMap(sheet => sheet.data)
-      : allCards;
-
-    const filtered = cardsToRender.filter(card => {
-      const matchCategory = selectedCategory ? card.Category === selectedCategory : true;
-      const matchTitle = card.Title?.toLowerCase().includes(searchTerm.toLowerCase());
-      return matchCategory && matchTitle;
-    });
-
-    if (!filtered.length) {
-      cardsWrapper.innerHTML = '<p>No matching results.</p>';
-      return;
-    }
-
-    filtered.forEach(card => {
-      const div = document.createElement('div');
-      div.className = 'card';
-      div.innerHTML = `
-        <div class="image-container">
-          <img src="${card['Image URL'] || '/icons/default-icon.png'}" alt="${card.Title}">
-          <div class="overlay">
-            <span class="overlay-text">Open</span>
-          </div>
-        </div>
-        <h5>${card.Title}</h5>
-        <p><i>${card.Category} | ${card.Subcategory}</i></p>
-        <p>${card.Description}</p>
-
-      `;
-      cardsWrapper.appendChild(div);
-    });
-  }
-*/
 function renderCards() {
   cardsWrapper.innerHTML = '';
 
@@ -140,7 +98,6 @@ function renderCards() {
       <p>${card.Description}</p>
     `;
 
-    // If logged in, add the heart icon overlay
     const isLoggedIn = !!sessionStorage.getItem('username');
     if (isLoggedIn) {
       const imageDiv = div.querySelector('.image-container');
@@ -196,14 +153,12 @@ function renderCards() {
   });
 }
 
-  // Initial render (local data)
   renderCards();
 
-  // Listen to global title search from header — search across all data
   window.addEventListener('title-search', (e) => {
     searchTerm = e.detail.title;
     selectedCategory = null;
-    searchMode = 'global'; // switch to global search
+    searchMode = 'global';
     renderCards();
   });
 

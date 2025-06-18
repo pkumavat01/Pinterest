@@ -129,7 +129,6 @@
   color: black;
   font-weight: 500;
   border-radius: 18px; 
-  font-size: 18px;
   text-align: center;
   text-decoration: none; 
   cursor: pointer;
@@ -190,7 +189,6 @@
 
 .cards.small .cards-card-body p {
   color: white;
-  font-size: 24px;
   font-weight: 700;
   margin: 0;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* For readability */
@@ -284,21 +282,16 @@
   text-overflow: ellipsis;
   line-height: 18px;
 }
-.cards.long.block .cards-card-body p:last-of-type{
-  display:flex;
-  flex-direction:row;
-  justify-content:flex-start;
-  align-items:center;
-  
-  gap:5px;
-}
-.cards.long.block .cards-card-body p:last-of-type {
-   margin-top: 0;
-  display: -webkit-box;
+
+.ideas-page .cards.long.block .cards-card-body p:last-of-type {
+  margin-top: 0;
   -webkit-line-clamp: 2;    
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  display: flex;
+  gap: 5px;
+  align-items: center;
 }
 .cards.long.block .cards-card-body p:last-of-type img,
 .cards.long.block .cards-card-body p:last-of-type picture{
@@ -307,7 +300,6 @@
 }
 .cards.long.block .button-carousel .button-container a{
   margin:0;
-  font-size:var(--heading-font-size-xs);
   background-color:var(--overlay-background-color);
   color:var(--text-color);
   font-weight:bold;

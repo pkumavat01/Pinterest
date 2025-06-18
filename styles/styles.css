@@ -27,19 +27,18 @@
   --highlight-background-color: #cccccc;
   --link-red-background-color: #E60023;
 
-  /* sizes */
-  --heading-font-size-xxl: 24px;
-  --heading-font-size-xl: 18px;
-  --heading-font-size-l: 14.04px;
-  --heading-font-size-m: 12px;
-  --heading-font-size-s: 9.96px;
-  --heading-font-size-xs: 8.04px;
-  --body-font-size-m: 12px;
-
   /* body sizes */
-  --body-font-size-m: 22px;
-  --body-font-size-s: 19px;
-  --body-font-size-xs: 17px;
+    --body-font-size-m: 18px;
+    --body-font-size-s: 16px;
+    --body-font-size-xs: 14px;
+
+    /* heading sizes */
+    --heading-font-size-xxl: 45px;
+    --heading-font-size-xl: 36px;
+    --heading-font-size-l: 28px;
+    --heading-font-size-m: 22px;
+    --heading-font-size-s: 15px;
+    --heading-font-size-xs: 13px;
 
   /* nav height */
   --nav-height: 64px;
