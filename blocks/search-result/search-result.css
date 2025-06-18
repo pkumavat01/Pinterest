@@ -58,14 +58,13 @@
   object-fit: cover;
 }
 
-.card-container .card :where(h2,h3,h4,h5){
+.card-container .card :where(h2,h3,h4,h5,p,a){
   margin-top: 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;    
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size:var(--body-font-size-m);
 }
 .card-container .card p{
   margin-top: 0;
@@ -74,14 +73,12 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: var(--body-font-size-xs);
 }
 
 .card-container .card p i{
   margin-top: 0;
   background-color: var(--overlay-background-color);
   padding: 2px;
-  font-size: var(--body-font-size-xs);
   font-style: italic;
 }
 .subcategory-carousel {
@@ -89,10 +86,10 @@
   gap: 12px;
   overflow-x: auto;
   padding: 12px 0;
-  scrollbar-width: none; /* Firefox */
+  scrollbar-width: none; 
 }
 .subcategory-carousel::-webkit-scrollbar {
-  display: none; /* Chrome, Safari */
+  display: none; 
 }
 
 .subcategory-btn {
@@ -100,7 +97,6 @@
   background-color: #f1f1f1;
   border: none;
   border-radius: 999px;
-  font-size: 14px;
   cursor: pointer;
   white-space: nowrap;
   transition: background-color 0.2s ease, color 0.2s ease;
@@ -218,7 +214,6 @@
 
 .overlay-text {
   color: #fff;
-  font-size: 1rem;
   font-weight: bold;
   text-align: center;
 }
