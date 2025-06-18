@@ -235,20 +235,19 @@
 }
 
 .cards.long.block ul {
-  columns: 5;
+  columns: 200px;
   column-gap: 14px;
   padding:0;
 }
 
 .cards.long.block ul li {
-  background: white;
   display: inline-block;
   width: 100%;
   margin: 0 0 20px;
   border-radius: 8px;
-  break-inside: avoid;
   transition: transform 0.2s;
   position: relative;
+  break-inside: avoid;
 }
 
 .cards.long.block ul li:hover {

@@ -28,8 +28,15 @@ header nav[aria-expanded='true'] {
   overflow-y: auto;
   min-height: 100dvh;
 }
-
 @media (width >= 900px) {
+  header nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 0 32px;
+    max-width: 1264px;
+    padding: 38px 24px;
+  }}
+@media (width <= 900px) {
   header nav {
     display: flex;
     justify-content: space-between;
