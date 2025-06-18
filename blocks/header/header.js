@@ -150,16 +150,14 @@ export default async function decorate(block) {
   navWrapper.append(nav);
   block.append(navWrapper);
 
-  
+
   const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
-  // Modify existing Login button if user is logged in
   if (isLoggedIn) {
     const loginBtn = document.querySelector('.nav-tools a[href="/login"]');
     const signupBtn = document.querySelector('.nav-tools a[href="/signup"]');
 
-    // Hide the signup button if it exists
     if (signupBtn) {
-      signupBtn.style.display = 'none'; // fixed typo from 'dipplay'
+      signupBtn.style.display = 'none';
     }
 
     if (loginBtn) {
@@ -167,7 +165,7 @@ export default async function decorate(block) {
       loginBtn.href = '/login';
 
       loginBtn.addEventListener('click', (e) => {
-        e.preventDefault(); 
+        e.preventDefault();
         sessionStorage.removeItem('isLoggedIn');
         window.location.href = '/login';
       });
@@ -176,26 +174,37 @@ export default async function decorate(block) {
 
   const favoritesBtn = document.querySelector('a[href="/favorites"], a[title="Favorites"]');
 
-if (favoritesBtn) {
-  const buttonContainer = favoritesBtn.closest('p.button-container');
+  if (favoritesBtn) {
+    const buttonContainer = favoritesBtn.closest('p.button-container');
 
-  if (buttonContainer) {
-    const img = document.createElement('img');
-    img.src = "../../icons/fav_favicon.ico";
-    img.alt = 'Favorites';
+    if (buttonContainer) {
+      const img = document.createElement('img');
+      img.src = "../../icons/fav_favicon.ico";
+      img.alt = 'Favorites';
 
-    img.addEventListener('click', () => {
-      window.location.href = '/favorites';
-    });
+      img.addEventListener('click', () => {
+        window.location.href = '/favorites';
+      });
 
-    buttonContainer.innerHTML = '';
-    buttonContainer.appendChild(img);
+      buttonContainer.innerHTML = '';
+      buttonContainer.appendChild(img);
+    }
+
+    if (!isLoggedIn && buttonContainer) {
+      buttonContainer.remove();
+    }
   }
 
-  if (!isLoggedIn && buttonContainer) {
-    buttonContainer.remove();
-  }
-}
+  const brandImage = document.querySelector('.nav-brand picture, .nav-brand img');
 
-  
+  if (brandImage) {
+    const target = brandImage.closest('p');
+    if (target) {
+      target.style.cursor = 'pointer';
+      target.addEventListener('click', () => {
+        window.location.href = '/ideas';
+      });
+    }
+  }
+
 }

@@ -235,7 +235,7 @@
   display: block;
   border-radius: 8px;
 }
-.like-overlay{
+.image-container .like-overlay{
   position: absolute;
   top: 8px;
   right: 8px;
