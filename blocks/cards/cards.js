@@ -19,7 +19,6 @@ export default function decorate(block) {
   });
 
   ul.querySelectorAll('picture > img').forEach((img) => {
-    console.log(img.src)
     img.closest('picture').replaceWith(
       createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }])
     );
@@ -55,55 +54,7 @@ export default function decorate(block) {
     cardBody.insertBefore(wrapper, cardBody.firstChild);
   }
 });
-/*
-[...ul.querySelectorAll('.cards-card-image')].forEach((imageDiv) => {
-  const heartBtn = document.createElement('div');
-  heartBtn.className = 'like-overlay';
-  heartBtn.innerHTML = `<img src="/icons/heart.svg" alt="Like">`; 
-  heartBtn.addEventListener('click', async (e) => {
-    e.stopPropagation();
 
-    const card = imageDiv.closest('li');
-    const img = imageDiv.querySelector('img')?.src;
-    const title = card.querySelector('h5, h3, h4')?.textContent?.trim() || '';
-    const desc = card.querySelector('p')?.textContent?.trim() || '';
-    const user = sessionStorage.getItem('username') || 'Punam';
-
-    if (!img || !title) return alert('Missing data to save favorite.');
-
-    const favorite = {
-      user,
-      favorites: [
-        {
-          title,
-          description: desc,
-          image: img,
-        },
-      ],
-    };
-
-    try {
-      const res = await fetch('http://localhost:5000/api/favorites/sync', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(favorite),
-      });
-
-      const result = await res.json();
-      if (result.success) {
-        alert('Added to favorites!');
-        heartBtn.style.opacity = 0.4; 
-      } else {
-        alert('Failed to add favorite.');
-      }
-    } catch (err) {
-      console.error('Favorite error:', err);
-      alert('Server error while adding favorite.');
-    }
-  });
-
-  imageDiv.appendChild(heartBtn);
-});*/
 
 const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
 
@@ -191,10 +142,6 @@ if (isLoggedIn) {
   });
 const allSmallCards = [...document.querySelectorAll('main > div:nth-of-type(2) li')];
   const seeMoreBtn2 = document.querySelector('main > div:nth-of-type(2) > div:last-of-type p');
-
-  if (!allSmallCards.length || !seeMoreBtn2) {
-    return setTimeout(setupSeeMoreSmallCards, 100);
-  }
 
   const initialCountSmall = 10;
   let currentCountSmall = initialCountSmall;

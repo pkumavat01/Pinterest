@@ -1,128 +1,68 @@
 export default async function decorate(block) {
-  const input = createSearchInput();
-  const dropdown = createDropdown();
-  const cardWrapper = createCardWrapper(); // For showing fallback results
+  let dataUrl = null;
+  [...block.children].forEach((row) => {
+    const linkElement = row.querySelector('a');
+    if (linkElement) {
+      dataUrl = linkElement.href;
+      row.style.display = 'none';
+    }
+  });
 
-  block.append(input, dropdown, cardWrapper);
+  if (!dataUrl) return;
 
-  const [queryIndexRes, dataRes] = await Promise.all([
-    fetch('/query-index.json'),
-    fetch('/data.json'),
-  ]);
+  const searchInput = document.createElement('input');
+  searchInput.type = 'text';
+  searchInput.placeholder = 'Search for easy dinners, fashion, etc';
+  searchInput.className = 'global-search-input';
 
-  const queryIndex = await queryIndexRes.json();
-  const dataJson = await dataRes.json();
-  const sheets = dataJson[':names'] || [];
+  const resultsDropdown = document.createElement('div');
+  resultsDropdown.className = 'search-dropdown';
 
-  const filteredPages = (queryIndex.data || []).filter(p => p.path.startsWith('/search'));
+  block.append(searchInput, resultsDropdown);
 
-  // Render dropdown options based on input
-  function renderOptions(searchTerm = '') {
-    dropdown.innerHTML = '';
-    const term = searchTerm.toLowerCase();
+  const searchIndexData = await (await fetch(dataUrl)).json();
 
-    sheets.forEach(sheet => {
-      const pageMeta = filteredPages.find(p => p.path === `/search/${sheet}`);
-      if (!pageMeta) return;
+  function renderSearchOptions(query = '') {
+    resultsDropdown.innerHTML = '';
+    const normalizedQuery = query.toLowerCase();
 
-      const title = pageMeta.title || sheet;
-      if (title.toLowerCase().includes(term)) {
-        dropdown.appendChild(createOption(title, pageMeta.image, sheet));
-      }
-    });
+    searchIndexData.data
+      .filter((page) => page.path.startsWith('/search'))
+      .filter((page) => page.title?.toLowerCase().includes(normalizedQuery))
+      .forEach((page) => {
+        const resultItem = document.createElement('div');
+        resultItem.className = 'search-option';
+        resultItem.innerHTML = `
+          <img src="${page.image || '/icons/default-icon.png'}" alt="${page.title}" />
+          <span>${page.title}</span>
+        `;
 
-    dropdown.style.display = dropdown.children.length > 0 ? 'flex' : 'none';
-  }
+        resultItem.addEventListener('click', () => {
+          window.location.href = page.path;
+        });
 
-  // Show cards matching entered title (fallback if no dropdown match)
-  function showCardsByTitle(title) {
-    cardWrapper.innerHTML = '';
-    const term = title.toLowerCase();
-
-    let found = false;
-
-    sheets.forEach(sheet => {
-      const records = dataJson[sheet]?.data || [];
-      records.forEach(record => {
-        if (record.Title?.toLowerCase().includes(term)) {
-          const card = document.createElement('div');
-          card.className = 'card';
-          card.innerHTML = `
-            <img src="${record['Image URL'] || '/icons/default-icon.png'}" alt="${record.Title}">
-            <h3>${record.Title}</h3>
-            <p>${record.Description || ''}</p>
-          `;
-          cardWrapper.appendChild(card);
-          found = true;
-        }
+        resultsDropdown.appendChild(resultItem);
       });
-    });
 
-    if (!found) {
-      cardWrapper.innerHTML = '<p>No results found for your search.</p>';
+    resultsDropdown.style.display = resultsDropdown.children.length > 0 ? 'flex' : 'none';
+  }
+
+  searchInput.addEventListener('focus', () => renderSearchOptions(searchInput.value));
+  searchInput.addEventListener('input', () => renderSearchOptions(searchInput.value));
+  
+  searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      const searchText = searchInput.value.trim();
+      if (searchText && resultsDropdown.children.length === 0) {
+        window.dispatchEvent(
+          new CustomEvent('title-search', { detail: { title: searchText } })
+        );
+        resultsDropdown.style.display = 'none';
+      }
     }
-  }
-
-  // Events
-  input.addEventListener('focus', () => {
-    renderOptions(input.value);
   });
 
-  input.addEventListener('input', () => {
-    renderOptions(input.value);
+  searchInput.addEventListener('blur', () => {
+    setTimeout(() => (resultsDropdown.style.display = 'none'), 200);
   });
-
-  input.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    const title = input.value.trim();
-    const hasDropdown = dropdown.children.length > 0;
-
-    if (!hasDropdown && title) {
-      // Dispatch custom event to main body
-      const event = new CustomEvent('title-search', { detail: { title } });
-      window.dispatchEvent(event);
-      dropdown.style.display = 'none';
-    }
-  }
-});
-
-  input.addEventListener('blur', () => {
-    setTimeout(() => {
-      dropdown.style.display = 'none';
-    }, 200);
-  });
-
-  // Utilities
-  function createSearchInput() {
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.placeholder = 'Search for easy dinners, fashion, etc';
-    input.className = 'global-search-input';
-    return input;
-  }
-
-  function createDropdown() {
-    const div = document.createElement('div');
-    div.className = 'search-dropdown';
-    return div;
-  }
-
-  function createCardWrapper() {
-    const div = document.createElement('div');
-    div.className = 'search-cards-wrapper';
-    return div;
-  }
-
-  function createOption(title, image, sheet) {
-    const option = document.createElement('div');
-    option.className = 'search-option';
-    option.innerHTML = `
-      <img src="${image || '/icons/default-icon.png'}" alt="${title}" />
-      <span>${title}</span>
-    `;
-    option.addEventListener('click', () => {
-      window.location.href = `/search/${sheet}`;
-    });
-    return option;
-  }
 }
