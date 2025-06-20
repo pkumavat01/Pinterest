@@ -1,4 +1,4 @@
-import { handleLoginClick ,handleSignupClick} from '../../scripts/auth.js';
+import { handleLoginClick, handleSignupClick } from '../../scripts/auth.js';
 
 export default function decorate(block) {
   const cols = [...block.firstElementChild.children];
@@ -17,9 +17,9 @@ export default function decorate(block) {
   });
 
   if (block.classList.contains('forms')) {
-    console.log("Forms found")
+    console.log('Forms found');
     const columns = block.querySelectorAll(':scope > div ');
-    console.log(columns[0])
+    console.log(columns[0]);
     if (columns.length >= 2) {
       const usernameInput = document.createElement('input');
       usernameInput.type = 'text';
@@ -48,34 +48,33 @@ export default function decorate(block) {
   }
 
   if (block.classList.contains('forms-signup')) {
-  console.log("Signup form found");
+    console.log('Signup form found');
 
-  const columns = block.querySelectorAll(':scope > div ');
-  if (columns.length >= 2) {
-    const usernameInput = document.createElement('input');
-    usernameInput.type = 'text';
-    usernameInput.placeholder = 'Create Username';
-    usernameInput.id = 'signup-username';
-    columns[0].lastElementChild.appendChild(usernameInput);
+    const columns = block.querySelectorAll(':scope > div ');
+    if (columns.length >= 2) {
+      const usernameInput = document.createElement('input');
+      usernameInput.type = 'text';
+      usernameInput.placeholder = 'Create Username';
+      usernameInput.id = 'signup-username';
+      columns[0].lastElementChild.appendChild(usernameInput);
 
-    const passwordWrapper = document.createElement('div');
-    passwordWrapper.style.position = 'relative';
+      const passwordWrapper = document.createElement('div');
+      passwordWrapper.style.position = 'relative';
 
-    const passwordInput = document.createElement('input');
-    passwordInput.type = 'password';
-    passwordInput.placeholder = 'Create Password';
-    passwordInput.id = 'signup-password';
-    passwordWrapper.appendChild(passwordInput);
-    columns[1].lastElementChild.appendChild(passwordWrapper);
+      const passwordInput = document.createElement('input');
+      passwordInput.type = 'password';
+      passwordInput.placeholder = 'Create Password';
+      passwordInput.id = 'signup-password';
+      passwordWrapper.appendChild(passwordInput);
+      columns[1].lastElementChild.appendChild(passwordWrapper);
 
-    const errorMsg = document.createElement('p');
-    errorMsg.id = 'signup-error';
-    errorMsg.style.color = 'red';
-    errorMsg.style.marginTop = '10px';
-    columns[1].lastElementChild.appendChild(errorMsg);
+      const errorMsg = document.createElement('p');
+      errorMsg.id = 'signup-error';
+      errorMsg.style.color = 'red';
+      errorMsg.style.marginTop = '10px';
+      columns[1].lastElementChild.appendChild(errorMsg);
 
-    handleSignupClick({ usernameInput, passwordInput, errorMsg });
+      handleSignupClick({ usernameInput, passwordInput, errorMsg });
+    }
   }
-}
-
 }

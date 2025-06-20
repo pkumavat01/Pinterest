@@ -17,7 +17,7 @@
   position: relative;
   overflow: hidden;
   border-radius: 20px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 10%);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   background-color: var(--background-color);
 }
@@ -25,7 +25,7 @@
 .cards.big > ul > li:hover,
 .cards.small > ul > li:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 20%);
 }
 
 .cards.big .cards-card-image,
@@ -50,7 +50,7 @@
   left: 0;
   right: 0;
   padding: 24px;
-  background: linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0));
+  background: linear-gradient(to top, rgb(0 0 0 / 60%), rgb(0 0 0 / 0%));
   color: white;
   margin: 0;
   display: flex;
@@ -100,14 +100,16 @@
   justify-content: center;
   align-items: center;
 }
+
 .cards.small .cards-card-body {
   transition: background-color 0.3s ease;
 }
 
 .cards.small .cards-card-body:hover > ul > li{
-  background-color: rgba(0, 0, 0, 0.6); 
+  background-color: rgb(0 0 0 / 60%); 
   color: white; 
 }
+
 .cards.small .cards-card-body a.button {
   pointer-events: all;
   padding: 10px 18px;
@@ -122,6 +124,7 @@
   display:flex;
   justify-content:center;
 }
+
 .cards-container .default-content-wrapper:last-of-type p{
   display: inline-block;
   padding: 12px 24px;
@@ -129,8 +132,7 @@
   color: black;
   font-weight: 500;
   border-radius: 18px; 
-  text-align: center;
-  text-decoration: none; 
+  text-align: center; 
   cursor: pointer;
   transition: background-color 0.3s ease;
   text-decoration:none;
@@ -157,14 +159,14 @@
   position: relative;
   overflow: hidden;
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   background-color: var(--background-color);
 }
 
 .cards.small > ul > li:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 20px rgb(0 0 0 / 20%);
 }
 
 
@@ -191,11 +193,13 @@
   color: white;
   font-weight: 700;
   margin: 0;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* For readability */
+  text-shadow: 0 2px 4px rgb(0 0 0 / 50%); /* For readability */
 }
+
 .cards.small  ul li .cards-card-body p a{
   background-color:transparent;
 }
+
 .cards.small .like-overlay,
 .cards.big .like-overlay{
   display: none;
@@ -270,7 +274,7 @@
 }
 
 .cards.long.block .button-carousel .button-container{
-  margin:0.4rem 0 0 0;
+  margin:0.4rem 0 0;
 }
 
 .cards.long.block .cards-card-body p:first-of-type{
@@ -293,11 +297,13 @@
   gap: 5px;
   align-items: center;
 }
+
 .cards.long.block .cards-card-body p:last-of-type img,
 .cards.long.block .cards-card-body p:last-of-type picture{
   width:30px;
   height:30px;
 }
+
 .cards.long.block .button-carousel .button-container a{
   margin:0;
   background-color:var(--overlay-background-color);
@@ -317,7 +323,7 @@
   position: absolute;
   top: 8px;
   right: 8px;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgb(255 255 255 / 90%);
   border-radius: 50%;
   width: 32px;
   height: 32px;
@@ -328,6 +334,7 @@
   transition: transform 0.2s ease;
   opacity: 0;
 }
+
 .cards-card-image:hover .like-overlay {
   opacity: 1;
 }
@@ -340,16 +347,19 @@
   width: 18px;
   height: 18px;
 }
+
 .cards.long.block .cards-card-body{
   position: relative;
 }
+
 .cards.long.block .unlike-btn{
   position: absolute;
   top:-60px;
   left:2px;
- background: rgba(255, 255, 255, 0.8);
+ background: rgb(255 255 255 / 80%);
   border-radius: 100px;
 }
+
 .cards.long.block .unlike-btn img{
   width:18px;
   height: 18px;

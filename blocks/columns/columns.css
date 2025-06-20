@@ -33,7 +33,7 @@
   border-radius: 16px;
   padding: 24px 20px;
   margin: 2rem auto;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 16px rgb(0 0 0 / 10%);
   max-width: 100%;
   width: 100%;
 }
@@ -101,14 +101,16 @@
   text-decoration: none;
   transition: background-color 0.3s ease;
 }
+
 a.button:any-link{
   background-color: #e60023;
 }
+
 .button-container .button:hover {
   background-color: #c2001f;
 }
 
-@media (min-width: 600px) {
+@media (width >= 600px) {
   .section.columns-container {
     width: 400px;
   }

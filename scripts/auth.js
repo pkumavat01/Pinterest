@@ -3,7 +3,7 @@ export function handleLoginClick({ usernameInput, passwordInput, errorMsg }) {
   const loginBtn = document.querySelector('.button[title="Login"]');
   if (!loginBtn) return;
 
-  loginBtn.addEventListener('click', async function (e) {
+  loginBtn.addEventListener('click', async (e) => {
     e.preventDefault();
 
     const username = usernameInput.value.trim();
@@ -19,7 +19,7 @@ export function handleLoginClick({ usernameInput, passwordInput, errorMsg }) {
       const res = await fetch('http://localhost:5000/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({ username, password }),
       });
 
       const data = await res.json();
@@ -42,7 +42,7 @@ export function handleSignupClick({ usernameInput, passwordInput, errorMsg }) {
   const signupBtn = document.querySelector('.button[title="Signup"]');
   if (!signupBtn) return;
 
-  signupBtn.addEventListener('click', async function (e) {
+  signupBtn.addEventListener('click', async (e) => {
     e.preventDefault();
 
     const username = usernameInput.value.trim();

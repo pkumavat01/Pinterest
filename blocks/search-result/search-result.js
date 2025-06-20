@@ -3,16 +3,14 @@ import { SERVER_URL } from '../../scripts/config.js';
 export default async function decorate(block) {
   const currentPageKey = window.location.pathname.split('/').pop();
 
-  // Get JSON data URL from block's children
   let dataUrl;
   [...block.children].forEach((row) => {
-    const linkElement = row.querySelector('a'); 
+    const linkElement = row.querySelector('a');
     if (linkElement?.href) dataUrl = linkElement.href;
   });
 
   if (!dataUrl) return;
 
-  // Fetch or retrieve cached data
   let allPagesData;
   if (sessionStorage.getItem('cachedData')) {
     allPagesData = JSON.parse(sessionStorage.getItem('cachedData'));
@@ -30,7 +28,7 @@ export default async function decorate(block) {
 
   const allItems = currentPageData.data;
   const allCategories = [...new Set(allItems.map((item) => item.Category).filter(Boolean))];
-  
+
   const categoryColors = {};
   allCategories.forEach((category) => {
     const color = allItems.find((item) => item.Category === category)?.Color || '#ffffff';
@@ -85,10 +83,9 @@ export default async function decorate(block) {
 
   function renderItems() {
     resultsContainer.innerHTML = '';
-    const sourceItems =
-      filterMode === 'global'
-        ? Object.values(allPagesData).flatMap((sheet) => Array.isArray(sheet.data) ? sheet.data : [])
-        : allItems;
+    const sourceItems = filterMode === 'global'
+      ? Object.values(allPagesData).flatMap((sheet) => (Array.isArray(sheet.data) ? sheet.data : []))
+      : allItems;
 
     const filteredItems = sourceItems.filter((item) => {
       const matchesCategory = activeCategory ? item.Category === activeCategory : true;
@@ -118,7 +115,7 @@ export default async function decorate(block) {
         const imageContainer = itemCard.querySelector('.image-container');
         const likeButton = document.createElement('div');
         likeButton.className = 'like-overlay';
-        likeButton.innerHTML = `<img src="/icons/heart.svg" alt="Like">`;
+        likeButton.innerHTML = '<img src="/icons/heart.svg" alt="Like">';
         likeButton.addEventListener('click', async (e) => {
           e.stopPropagation();
           const favoritePayload = {

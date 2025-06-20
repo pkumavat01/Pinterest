@@ -150,7 +150,6 @@ export default async function decorate(block) {
   navWrapper.append(nav);
   block.append(navWrapper);
 
-
   const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
   if (isLoggedIn) {
     const loginBtn = document.querySelector('.nav-tools a[href="/login"]');
@@ -179,7 +178,7 @@ export default async function decorate(block) {
 
     if (buttonContainer) {
       const img = document.createElement('img');
-      img.src = "../../icons/fav_favicon.ico";
+      img.src = '../../icons/fav_favicon.ico';
       img.alt = 'Favorites';
 
       img.addEventListener('click', () => {
@@ -206,5 +205,4 @@ export default async function decorate(block) {
       });
     }
   }
-
 }

@@ -49,13 +49,13 @@ export default async function decorate(block) {
 
   searchInput.addEventListener('focus', () => renderSearchOptions(searchInput.value));
   searchInput.addEventListener('input', () => renderSearchOptions(searchInput.value));
-  
+
   searchInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       const searchText = searchInput.value.trim();
       if (searchText && resultsDropdown.children.length === 0) {
         window.dispatchEvent(
-          new CustomEvent('title-search', { detail: { title: searchText } })
+          new CustomEvent('title-search', { detail: { title: searchText } }),
         );
         resultsDropdown.style.display = 'none';
       }

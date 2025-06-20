@@ -1,244 +1,255 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
+import { SERVER_URL } from '../../scripts/config.js';
 
-export default function decorate(block) {
-  const ul = document.createElement('ul');
+function buildCardListFromBlockChildren(block) {
+  const listElement = document.createElement('ul');
 
   [...block.children].forEach((row) => {
-    const li = document.createElement('li');
-    while (row.firstElementChild) li.append(row.firstElementChild);
+    const listItem = document.createElement('li');
+    listItem.append(...row.children);
 
-    [...li.children].forEach((div) => {
-      if (div.children.length === 1 && div.querySelector('picture')) {
-        div.className = 'cards-card-image';
-      } else {
-        div.className = 'cards-card-body';
-      }
+    [...listItem.children].forEach((div) => {
+      div.className = div.querySelector('picture')
+        ? 'cards-card-image'
+        : 'cards-card-body';
     });
 
-    ul.append(li);
+    listElement.appendChild(listItem);
   });
 
-  ul.querySelectorAll('picture > img').forEach((img) => {
-    img.closest('picture').replaceWith(
-      createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }])
+  listElement.querySelectorAll('picture > img').forEach((img) => {
+    img.closest('picture')?.replaceWith(
+      createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }]),
     );
   });
 
-  block.textContent = '';
-  block.append(ul);
+  return listElement;
+}
+function wrapButtonContainers() {
+  document
+    .querySelectorAll('.cards.long > ul > li .cards-card-body')
+    .forEach((cardBody) => {
+      if (cardBody.querySelector('.button-carousel')) return;
+      const buttons = Array.from(
+        cardBody.querySelectorAll('.button-container'),
+      );
 
-  if (block.classList.contains('dynamic')) {
-    console.log("found")
-    if (
-      document.body.classList.contains('favorites-page') &&
-      sessionStorage.getItem('isLoggedIn') !== 'true'
-    ) {
-      window.location.href = '/login';
-    }
-    else {
-
-      loadDynamicFavorites(ul);
-    }
-  }
-  
-  document.querySelectorAll('.cards.long > ul >li .cards-card-body').forEach(cardBody => {
-  const buttons = cardBody.querySelectorAll('.button-container');
-  if (buttons.length) {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'button-carousel';
-
-    buttons.forEach(btn => {
-      wrapper.appendChild(btn); 
-    });
-
-    cardBody.insertBefore(wrapper, cardBody.firstChild);
-  }
-});
-
-
-const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
-
-if (isLoggedIn) {
-  [...ul.querySelectorAll('.cards-card-image')].forEach((imageDiv) => {
-    const heartBtn = document.createElement('div');
-    heartBtn.className = 'like-overlay';
-    heartBtn.innerHTML = `<img src="/icons/heart.svg" alt="Like">`;
-
-    heartBtn.addEventListener('click', async (e) => {
-      e.stopPropagation();
-
-      const card = imageDiv.closest('li');
-      const img = imageDiv.querySelector('img')?.src;
-      console.log(img)
-      const title = card.querySelector('h5, h3, h4')?.textContent?.trim() || '';
-      const desc = card.querySelector('p')?.textContent?.trim() || '';
-      const user = sessionStorage.getItem('username') || 'Punam';
-
-      if (!img || !title) return alert('Missing data to save favorite.');
-
-      const favorite = {
-        user,
-        favorites: [
-          {
-            title,
-            description: desc,
-            image: img,
-          },
-        ],
-      };
-
-      try {
-        const res = await fetch('http://localhost:5000/api/favorites/sync', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(favorite),
-        });
-
-        const result = await res.json();
-        if (result.success) {
-          alert('Added to favorites!');
-          heartBtn.style.opacity = 0.4;
-        } else {
-          alert('Failed to add favorite.');
-        }
-      } catch (err) {
-        console.error('Favorite error:', err);
-        alert('Server error while adding favorite.');
+      if (buttons.length > 0) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'button-carousel';
+        buttons.forEach((btn) => wrapper.appendChild(btn));
+        cardBody.insertBefore(wrapper, cardBody.firstChild);
       }
     });
+}
 
-    imageDiv.appendChild(heartBtn);
+function addLikeButtons(listElement) {
+  listElement
+    .querySelectorAll('.cards-card-image')
+    .forEach((imageDiv) => {
+      const likeButton = document.createElement('div');
+      likeButton.className = 'like-overlay';
+      likeButton.innerHTML = '<img src="/icons/heart.svg" alt="Like">';
+
+      likeButton.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const cardElement = imageDiv.closest('li');
+        const imageUrl = imageDiv.querySelector('img')?.src;
+        const title = cardElement.querySelector('h5, h3, h4')?.textContent?.trim() || '';
+        const description = cardElement.querySelector('p')?.textContent?.trim() || '';
+        const username = sessionStorage.getItem('username') || 'Punam';
+
+        if (!imageUrl || !title) {
+          return alert('Missing data to save favorite.');
+        }
+
+        const favoriteData = {
+          user: username,
+          favorites: [{ title, description, image: imageUrl }],
+        };
+
+        try {
+          const res = await fetch(`${SERVER_URL}/api/favorites/sync`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(favoriteData),
+          });
+
+          const result = await res.json();
+          if (result.success) {
+            alert('Added to favorites!');
+            likeButton.style.opacity = 0.4;
+          } else {
+            alert('Failed to add favorite.');
+          }
+        } catch (error) {
+          console.error('Error adding favorite:', error);
+          alert('Server error. Please try again.');
+        }
+      });
+
+      imageDiv.appendChild(likeButton);
+    });
+}
+
+function addSeeMorePaginationForList(listSelector, buttonSelector, getCounts) {
+  const cards = [...document.querySelectorAll(`${listSelector} > li`)];
+  let { init, increment } = getCounts();
+
+  let currentCount = init;
+
+  function showCards(count) {
+    cards.forEach((card, index) => {
+      card.style.display = index < count ? '' : 'none';
+    });
+  }
+
+  showCards(currentCount);
+
+  const seeMoreButton = document.querySelector(buttonSelector);
+  if (!seeMoreButton) return;
+
+  seeMoreButton.addEventListener('click', () => {
+    currentCount = Math.min(cards.length, currentCount + increment);
+    showCards(currentCount);
+    if (currentCount >= cards.length) seeMoreButton.style.display = 'none';
+  });
+
+  window.addEventListener('resize', () => {
+    ({ init, increment } = getCounts());
+    currentCount = init;
+    showCards(currentCount);
+    seeMoreButton.style.display = '';
   });
 }
 
-  // see more big cards
-  const allBigCards = [...document.querySelectorAll('main > div:first-of-type li')];
-  const initialCount = 3;
-  let currentCount = initialCount;
-
-  allBigCards.forEach((card, i) => {
-    if (i >= initialCount) card.style.display = 'none';
-  });
-
-  const seeMoreBtn1 = document.querySelector('main > div:first-of-type > div:last-of-type p');
-  if (!seeMoreBtn1) return;
-
-  seeMoreBtn1.addEventListener('click', () => {
-    console.log('click');
-
-    const remaining = allBigCards.length - currentCount;
-    const showCount = remaining >= 3 ? 3 : remaining;
-
-    allBigCards.slice(currentCount, currentCount + showCount).forEach((card) => {
-      card.style.display = 'block';
-    });
-
-    currentCount += showCount;
-    console.log(currentCount, ' ', allBigCards.length);
-
-    if (currentCount >= allBigCards.length) {
-      seeMoreBtn1.style.display = 'none';
-    }
-  });
-const allSmallCards = [...document.querySelectorAll('main > div:nth-of-type(2) li')];
-  const seeMoreBtn2 = document.querySelector('main > div:nth-of-type(2) > div:last-of-type p');
-
-  const initialCountSmall = 10;
-  let currentCountSmall = initialCountSmall;
-
-  allSmallCards.forEach((card, i) => {
-    if (i >= initialCountSmall) card.style.display = 'none';
-  });
-
-  if (seeMoreBtn2.classList.contains('bound')) return;
-  seeMoreBtn2.classList.add('bound');
-
-  seeMoreBtn2.addEventListener('click', () => {
-    const remaining = allSmallCards.length - currentCountSmall;
-    const showCount = remaining >= 5 ? 5 : remaining;
-
-    allSmallCards.slice(currentCountSmall, currentCountSmall + showCount).forEach((card) => {
-      card.style.display = 'block';
-    });
-
-    currentCountSmall += showCount;
-
-    if (currentCountSmall >= allSmallCards.length) {
-      seeMoreBtn2.style.display = 'none';
-    }
-  });
-}
-
-async function loadDynamicFavorites(ul) {
+async function loadDynamicFavorites(listElement) {
   const username = sessionStorage.getItem('username') || 'Punam';
-  const apiUrl = `http://localhost:5000/api/favorites/${username}`;
-
   try {
-    const res = await fetch(apiUrl);
+    const res = await fetch(`${SERVER_URL}/api/favorites/${username}`);
     const data = await res.json();
 
     if (!data.success || !Array.isArray(data.favorites)) {
-      console.warn('No favorites found or invalid response');
-      ul.innerHTML = '<li><p>No favorites found.</p></li>';
+      listElement.innerHTML = '<li><p>No favorites found.</p></li>';
       return;
     }
 
-    ul.innerHTML = '';
+    listElement.innerHTML = '';
+    const fragment = document.createDocumentFragment();
 
-    data.favorites.forEach((card) => {
-      const li = document.createElement('li');
-      console.log(card.image)
+    data.favorites.forEach((cardData) => {
+      const listItem = document.createElement('li');
+
       const imageDiv = document.createElement('div');
       imageDiv.className = 'cards-card-image';
-      if (card.image.startsWith('http')) {
+      if (cardData.image.startsWith('http')) {
         const img = document.createElement('img');
-        img.src = card.image;
-        img.alt = card.title;
+        img.src = cardData.image;
+        img.alt = cardData.title;
         img.loading = 'lazy';
         img.width = 750;
         imageDiv.appendChild(img);
       } else {
         imageDiv.appendChild(
-          createOptimizedPicture(card.image, card.title, false, [{ width: '750' }])
+          createOptimizedPicture(
+            cardData.image,
+            cardData.title,
+            false,
+            [{ width: '750' }],
+          ),
         );
       }
 
       const bodyDiv = document.createElement('div');
-      bodyDiv.className = 'cards-card-body';  
+      bodyDiv.className = 'cards-card-body';
+
+      // eslint-disable-next-line no-underscore-dangle
       bodyDiv.innerHTML = `
-        <h5>${card.title}</h5>
-        <p>${card.description}</p>
-        <button class="unlike-btn" data-id="${card._id}"><img src="/icons/dislike.svg" alt="unlike"></button>
+        <h5>${cardData.title}</h5>
+        <p>${cardData.description}</p>
+        <button class="unlike-btn" data-id="${cardData._id}">
+          <img src="/icons/dislike.svg" alt="unlike">
+        </button>
       `;
 
-      li.append(imageDiv, bodyDiv);
-      ul.appendChild(li);
+      listItem.append(imageDiv, bodyDiv);
+      fragment.appendChild(listItem);
     });
 
-    ul.addEventListener('click', async (e) => {
-      if (e.target.classList.contains('unlike-btn')) {
-        const cardId = e.target.dataset.id;
-        const deleteUrl = `http://localhost:5000/api/favorites/${username}/${cardId}`;
+    listElement.appendChild(fragment);
 
-        try {
-          const res = await fetch(deleteUrl, { method: 'DELETE' });
-          const result = await res.json();
+    listElement.addEventListener('click', async (e) => {
+      if (!e.target.closest('.unlike-btn')) return;
 
-          if (result.success) {
-            e.target.closest('li').remove();
-          } else {
-            console.warn('Failed to remove card:', result.message);
-            alert('Failed to remove favorite. Try again.');
-          }
-        } catch (err) {
-          console.error('Error removing card:', err);
-          alert('Server error. Try again later.');
+      const btn = e.target.closest('.unlike-btn');
+      const cardId = btn.dataset.id;
+
+      try {
+        const deleteRes = await fetch(
+          `${SERVER_URL}/api/favorites/${username}/${cardId}`,
+          { method: 'DELETE' },
+        );
+
+        const result = await deleteRes.json();
+        if (result.success) {
+          btn.closest('li').remove();
+        } else {
+          alert('Failed to remove favorite.');
         }
+      } catch (error) {
+        console.error('Error removing favorite:', error);
+        alert('Server error. Please try again.');
       }
     });
-
-  } catch (err) {
-    console.error('Error loading dynamic favorites:', err);
-    ul.innerHTML = '<li><p>Error loading favorites. Please try again.</p></li>';
+  } catch (error) {
+    console.error('Error fetching favorites:', error);
+    listElement.innerHTML = '<li><p>Error loading favorites. Please try again.</p></li>';
   }
 }
+
+export default function decorate(block) {
+  const listElement = buildCardListFromBlockChildren(block);
+  block.innerHTML = '';
+  block.appendChild(listElement);
+
+  if (block.classList.contains('dynamic')) {
+    if (
+      document.body.classList.contains('favorites-page')
+      && sessionStorage.getItem('isLoggedIn') !== 'true'
+    ) {
+      window.location.href = '/login';
+      return;
+    }
+    loadDynamicFavorites(listElement);
+  }
+
+  wrapButtonContainers();
+
+  if (sessionStorage.getItem('isLoggedIn') === 'true') {
+    addLikeButtons(listElement);
+  }
+
+  addSeeMorePaginationForList(
+    'main > div:first-of-type ul',
+    'main > div:first-of-type > div:last-of-type p',
+    () => {
+      const w = window.innerWidth;
+      if (w < 600) return { init: 2, increment: 2 };
+      if (w < 900) return { init: 4, increment: 4 };
+      return { init: 3, increment: 3 };
+    },
+  );
+
+  addSeeMorePaginationForList(
+    'main > div:nth-of-type(2) ul',
+    'main > div:nth-of-type(2) > div:last-of-type p',
+    () => {
+      const w = window.innerWidth;
+      if (w < 600) return { init: 2, increment: 2 };
+      if (w < 900) return { init: 4, increment: 4 };
+      return { init: 5, increment: 5 };
+    },
+  );
+}
+
+// ✨ Converts block children into UL list of LI with image & body classes.

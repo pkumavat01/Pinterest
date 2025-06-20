@@ -28,6 +28,7 @@ header nav[aria-expanded='true'] {
   overflow-y: auto;
   min-height: 100dvh;
 }
+
 @media (width >= 900px) {
   header nav {
     display: flex;
@@ -36,6 +37,7 @@ header nav[aria-expanded='true'] {
     max-width: 1264px;
     padding: 38px 24px;
   }}
+
 @media (width <= 900px) {
   header nav {
     display: flex;
@@ -220,6 +222,7 @@ header nav .nav-tools .default-content-wrapper{
   flex-direction:row;
   align-items:center;
 }
+
 header nav .nav-tools .default-content-wrapper .button-container a{
   background-color: var(--link-red-background-color);
   color:var(--background-color);
@@ -229,20 +232,24 @@ header nav .nav-tools .default-content-wrapper .button-container a{
   font-size: 16px;
   font-weight:bold;
 }
+
 header nav .nav-tools .default-content-wrapper .button-container img{
   padding: 0.8rem 1rem;
   width:25px;
   cursor:pointer;
 
 }
+
 header nav .nav-tools .default-content-wrapper .button-container img:hover {
   transform: scale(1.1);
   filter: brightness(1.2);
 }
+
 header nav .nav-tools .default-content-wrapper .button-container:first-of-type a{
   color: var(--text-color);
   background-color: var(--highlight-background-color);
 }
+
 header nav .nav-tools .default-content-wrapper .button-container img{
   color: var(--background-color);
   background-color: none;

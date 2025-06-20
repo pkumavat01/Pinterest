@@ -10,7 +10,7 @@
   border: 1px solid #eee;
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  box-shadow: 0 0 10px rgb(0 0 0 / 5%);
   transition: transform 0.2s;
 }
 
@@ -32,6 +32,7 @@
 .search-results-container .search-card-body h3 {
   margin-top: 0;
 }
+
 .card-container {
   columns: 200px;
   column-gap: 16px;
@@ -66,6 +67,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .card-container .card p{
   margin-top: 0;
   display: -webkit-box;
@@ -81,6 +83,7 @@
   padding: 2px;
   font-style: italic;
 }
+
 .subcategory-carousel {
   display: flex;
   gap: 12px;
@@ -88,6 +91,7 @@
   padding: 12px 0;
   scrollbar-width: none; 
 }
+
 .subcategory-carousel::-webkit-scrollbar {
   display: none; 
 }
@@ -101,9 +105,11 @@
   white-space: nowrap;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
+
 .title-search-input{
   visibility: hidden;
 }
+
 .subcategory-btn:hover {
   background-color: #ddd;
 }
@@ -112,6 +118,7 @@
   background-color: #000;
   color: #fff;
 }
+
 .carousel-wrapper {
   margin-bottom: 2rem;
   overflow-x: auto;
@@ -134,6 +141,7 @@
   -ms-overflow-style: none;     
   position: relative;
 }
+
 .carousel.selector.block > div {
   flex: 0 0 auto;
   display: flex;
@@ -143,7 +151,7 @@
   border-radius: 13px;
   min-width: fit-content;
   max-width: 250px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgb(0 0 0 / 10%);
   scroll-snap-align: start;
   transition: background 0.3s ease;
   cursor: pointer;
@@ -171,9 +179,11 @@
   object-fit: cover;
   display: block;
 }
+
 .carousel.selector.block .carousel-slide {
   flex: 0 0 100%;
 }
+
 .carousel.selector.block p,
 .carousel.selector.block h2 {
   margin: 0;
@@ -203,7 +213,7 @@
   left: 0;
   height: 100%;
   width: 100%;
-  background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+  background: rgb(0 0 0 / 50%); /* Semi-transparent overlay */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -221,6 +231,7 @@
 .image-container:hover .overlay {
   opacity: 1;
 }
+
 .image-container {
   position: relative;
 }
@@ -230,11 +241,12 @@
   display: block;
   border-radius: 8px;
 }
+
 .image-container .like-overlay{
   position: absolute;
   top: 8px;
   right: 8px;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgb(255 255 255 / 90%);
   border-radius: 50%;
   width: 32px;
   height: 32px;
@@ -245,10 +257,12 @@
   transition: transform 0.2s ease;
   opacity: 0;
 }
+
 .image-container .like-overlay img{
   width:20px;
   height: 20px;
 }
+
 .image-container:hover .like-overlay{
   opacity: 1;
 }
